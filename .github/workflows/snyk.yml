@@ -18,7 +18,17 @@ jobs:
         with:
           node-version: 18
 
+      - name: Check if package.json exists
+        id: check-package-json
+        run: |
+          if [ -f package.json ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install Dependencies
+        if: steps.check-package-json.outputs.exists == 'true'
         run: npm install
 
       # Runs the Snyk scan using the token secret
